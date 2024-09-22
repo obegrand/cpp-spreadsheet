@@ -396,3 +396,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/antlr-4.13.2-complete.jar
+/antlr4_runtime
+/dist
+/out/build/x64-debug
+/CMakePresets.json
+/cpp-spreadsheet.vcxproj
