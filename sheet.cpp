@@ -12,6 +12,11 @@ using namespace std::literals;
 void Sheet::SetCell(Position pos, std::string text) {
 	if (!pos.IsValid()) throw InvalidPositionException("Invalid cell position");
 
+	try {
+		if (sheet_.at(pos.row).at(pos.col)->GetText() == text) return;
+	}
+	catch (const std::out_of_range& e) {}
+
 	auto tmp_cell = std::make_unique<Cell>(*this);
 	tmp_cell->Set(std::move(text));
 	auto cell_refs = tmp_cell->GetReferencedCells();
@@ -38,15 +43,6 @@ const Cell* Sheet::GetCell(Position pos) const {
 	catch (const std::out_of_range& e) {
 		return nullptr;
 	}
-
-	//auto rows_it = sheet_.find(pos.row);
-	//if (rows_it != sheet_.end()) {
-	//	auto cells_it = rows_it->second.find(pos.col);
-	//	if (cells_it != rows_it->second.end()) {
-	//		return cells_it->second.get();
-	//	}
-	//}
-	//return nullptr;
 }
 Cell* Sheet::GetCell(Position pos) {
 	if (!pos.IsValid()) throw InvalidPositionException("Invalid position");
@@ -57,15 +53,6 @@ Cell* Sheet::GetCell(Position pos) {
 	catch (const std::out_of_range& e) {
 		return nullptr;
 	}
-
-	//auto rows_it = sheet_.find(pos.row);
-	//if (rows_it != sheet_.end()) {
-	//	auto cells_it = rows_it->second.find(pos.col);
-	//	if (cells_it != rows_it->second.end()) {
-	//		return cells_it->second.get();
-	//	}
-	//}
-	//return nullptr;
 }
 
 void Sheet::ClearCell(Position pos) {

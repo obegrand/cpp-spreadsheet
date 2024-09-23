@@ -10,7 +10,7 @@ class Sheet;
 
 class Cell : public CellInterface {
 public:
-	Cell(SheetInterface& sheet);
+	explicit Cell(SheetInterface& sheet);
 	~Cell();
 
 	void Set(std::string text);

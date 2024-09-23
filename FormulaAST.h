@@ -26,7 +26,7 @@ public:
 	FormulaAST& operator=(FormulaAST&&) = default;
 	~FormulaAST();
 
-	double Execute(CellFunction cellfunc) const;
+	double Execute(const CellFunction& cellfunc) const;
 	void PrintCells(std::ostream& out) const;
 	void Print(std::ostream& out) const;
 	void PrintFormula(std::ostream& out) const;

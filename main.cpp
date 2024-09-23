@@ -352,37 +352,6 @@ namespace {
         ASSERT(caught);
         ASSERT_EQUAL(sheet->GetCell("M6"_pos)->GetText(), "Ready");
     }
-
-    void Test14() {
-        auto sheet = CreateSheet();
-        sheet->SetCell("A1"_pos, "test 1");
-        std::cout << sheet->GetPrintableSize() << std::endl;
-
-        sheet->SetCell("A4"_pos, "test 2");
-        std::cout << sheet->GetPrintableSize() << std::endl;
-
-        sheet->SetCell("D1"_pos, "test 3");
-        std::cout << sheet->GetPrintableSize() << std::endl;
-
-        sheet->SetCell("C6"_pos, "test 4");
-        std::cout << sheet->GetPrintableSize() << std::endl;
-
-        sheet->SetCell("E5"_pos, "test 5");
-        std::cout << sheet->GetPrintableSize() << std::endl;
-
-        sheet->SetCell("F7"_pos, "test 6");
-        std::cout << sheet->GetPrintableSize() << std::endl;
-        
-        sheet->ClearCell("F7"_pos);
-        std::cout << sheet->GetPrintableSize() << std::endl;
-        
-        sheet->ClearCell("E5"_pos);
-        std::cout << sheet->GetPrintableSize() << std::endl;
-        
-        sheet->ClearCell("C6"_pos);
-        std::cout << sheet->GetPrintableSize() << std::endl;
-
-    }
 }  // namespace
 
 int main() {
@@ -406,5 +375,4 @@ int main() {
     RUN_TEST(tr, TestCellReferences);
     RUN_TEST(tr, TestFormulaIncorrect);
     RUN_TEST(tr, TestCellCircularReferences);
-    RUN_TEST(tr, Test14);
 }

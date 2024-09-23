@@ -72,7 +72,7 @@ namespace ASTImpl {
         virtual ~Expr() = default;
         virtual void Print(std::ostream& out) const = 0;
         virtual void DoPrintFormula(std::ostream& out, ExprPrecedence precedence) const = 0;
-        virtual double Evaluate(CellFunction cell_function) const = 0;
+        virtual double Evaluate(const CellFunction& cellfunc) const = 0;
 
         // higher is tighter
         virtual ExprPrecedence GetPrecedence() const = 0;
@@ -142,20 +142,20 @@ namespace ASTImpl {
                 }
             }
 
-            double Evaluate(CellFunction cell_function) const override {
+            double Evaluate(const CellFunction& cellfunc) const override {
                 double result = 0.;
                 switch (type_) {
                 case Add:
-                    result = lhs_->Evaluate(cell_function) + rhs_->Evaluate(cell_function);
+                    result = lhs_->Evaluate(cellfunc) + rhs_->Evaluate(cellfunc);
                     break;
                 case Subtract:
-                    result = lhs_->Evaluate(cell_function) - rhs_->Evaluate(cell_function);
+                    result = lhs_->Evaluate(cellfunc) - rhs_->Evaluate(cellfunc);
                     break;
                 case Multiply:
-                    result = lhs_->Evaluate(cell_function) * rhs_->Evaluate(cell_function);
+                    result = lhs_->Evaluate(cellfunc) * rhs_->Evaluate(cellfunc);
                     break;
                 case Divide:
-                    result = lhs_->Evaluate(cell_function) / rhs_->Evaluate(cell_function);
+                    result = lhs_->Evaluate(cellfunc) / rhs_->Evaluate(cellfunc);
                     break;
                 default:
                     // have to do this because VC++ has a buggy warning
@@ -202,9 +202,9 @@ namespace ASTImpl {
                 return EP_UNARY;
             }
 
-            double Evaluate(CellFunction cell_function) const override {
-                if (type_ == UnaryPlus) return operand_->Evaluate(cell_function);
-                else return operand_->Evaluate(cell_function) * -1.;
+            double Evaluate(const CellFunction& cellfunc) const override {
+                if (type_ == UnaryPlus) return operand_->Evaluate(cellfunc);
+                else return operand_->Evaluate(cellfunc) * -1.;
             }
 
         private:
@@ -235,9 +235,9 @@ namespace ASTImpl {
                 return EP_ATOM;
             }
 
-            double Evaluate(CellFunction cell_function) const override {
-                assert(cell_function.has_value());
-                return cell_function.value()(*cell_);
+            double Evaluate(const CellFunction& cellfunc) const override {
+                assert(cellfunc.has_value());
+                return cellfunc.value()(*cell_);
             }
 
         private:
@@ -262,7 +262,7 @@ namespace ASTImpl {
                 return EP_ATOM;
             }
 
-            double Evaluate(CellFunction cell_function) const override {
+            double Evaluate(const CellFunction& cellfunc) const override {
                 return value_;
             }
 
@@ -420,7 +420,7 @@ void FormulaAST::PrintFormula(std::ostream& out) const {
     root_expr_->PrintFormula(out, ASTImpl::EP_ATOM);
 }
 
-double FormulaAST::Execute(CellFunction cellfunc) const {
+double FormulaAST::Execute(const CellFunction& cellfunc) const {
     return root_expr_->Evaluate(cellfunc);
 }
 
