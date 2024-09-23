@@ -268,25 +268,23 @@ namespace graph /* Graph implementation */ {
 	}
 
 	inline bool graph::DirectedGraph::DetectCircularDependency(const VertexId& from, const std::vector<VertexId>& to_refs) const {
+		std::unordered_set<VertexId, GraphHasher> visited;
+		std::function<bool(const VertexId&)> traverse = [&](const VertexId& vertex) {
+			if (vertex == from) return true;
+			if (visited.count(vertex)) return false;
+
+			visited.insert(vertex);
+			const auto it = incidence_lists_.find(vertex);
+			if (it == incidence_lists_.end()) return false;
+
+			for (const auto* edge : it->second) {
+				if (traverse(edge->to)) return true;
+			}
+			return false;
+			};
+
 		return std::any_of(to_refs.begin(), to_refs.end(), [&](const VertexId& ref) {
-			if (from == ref) {
-				return true;
-			}
-
-			const auto incidence_edges_it = incidence_lists_.find(ref);
-			if (incidence_edges_it == incidence_lists_.end()) {
-				return false;
-			}
-
-			bool has_circular_dependency = false;
-			Traversal(ref, [&](const Edge* edge) -> bool {
-				if (from == edge->to) {
-					has_circular_dependency = true;
-					return true;
-				}
-				return false;
-				});
-			return has_circular_dependency;
+			return traverse(ref);
 			});
 	}
 
